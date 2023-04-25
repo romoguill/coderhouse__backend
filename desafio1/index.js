@@ -31,6 +31,14 @@ class ProductManager {
     this.#products.push({ id: this.#currentId, ...product });
     this.#currentId++;
   }
+
+  getProductById(id) {
+    const product = this.#products.find((product) => product.id === id);
+    if (!product) {
+      throw new Error('No product found with that id');
+    }
+    return product;
+  }
 }
 
 module.exports = {

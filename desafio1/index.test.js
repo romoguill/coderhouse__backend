@@ -45,3 +45,13 @@ test('adding other product should work', () => {
   expect(productManager.getProducts().length).toEqual(2);
   expect(productManager.getProducts()[1].id).toEqual(1);
 });
+
+test('getProductById returns product or throws error if no product was found with provided id', () => {
+  expect(productManager.getProductById(0)).toEqual({
+    id: 0,
+    ...product1,
+  });
+  expect(() => productManager.getProductById(40)).toThrow(
+    new Error('No product found with that id')
+  );
+});
