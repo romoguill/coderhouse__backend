@@ -21,10 +21,15 @@ class ProductManager {
     console.log(product instanceof Product);
     if (!(product instanceof Product)) {
       console.log('a');
-      throw new Error('Failed to add. Arg must be of type Product');
+      throw new Error('Fail to add. Arg must be of type Product');
+    }
+
+    if (this.#products.some((p) => product.code === p.code)) {
+      throw new Error('Fail to add product. Duplicate code property');
     }
 
     this.#products.push({ id: this.#currentId, ...product });
+    this.#currentId++;
   }
 }
 
