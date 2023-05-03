@@ -22,16 +22,14 @@ class ProductManager {
   }
 
   #createDB() {
-    fs.promises.writeFile(this.path, JSON.stringify(this.#products));
+    fs.promises
+      .writeFile(this.path, JSON.stringify(this.#products))
+      .then(() => console.log('Database has been initialized'))
+      .catch(() => console.log('Error creating the database'));
   }
 
   #readFile() {
-    fs.promises
-      .readFile(this.path)
-      .then((file) => {
-        console.log(file);
-      })
-      .catch((error) => console.log(error.message));
+    fs.promises.readFile(this.path);
   }
 
   getProducts() {
