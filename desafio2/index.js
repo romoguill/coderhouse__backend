@@ -29,7 +29,7 @@ class ProductManager {
     return fs.promises.readFile(this.path);
   }
 
-  #writeFile() {
+  #writeFile(data) {
     return fs.promises.writeFile(this.path, data);
   }
 
@@ -38,8 +38,8 @@ class ProductManager {
     return Math.max(ids);
   }
 
-  #isIdDuplicate(products, id) {
-    return products.find((product) => product.id === id) === null
+  #isCodeDuplicate(products, code) {
+    return products.find((product) => product.code === code) === undefined
       ? false
       : true;
   }
@@ -53,28 +53,57 @@ class ProductManager {
     }
   }
 
-  addProduct(product) {
+  async addProduct(product) {
     if (!(product instanceof Product)) {
       console.log('Fail to add. Arg must be of type Product');
       return;
     }
 
-    if (this.#products.some((p) => product.code === p.code)) {
-      console.log('Fail to add product. Duplicate code property');
-      return;
-    }
+    try {
+      const products = await this.getProducts();
 
-    this.#products.push({ id: this.#currentId, ...product });
-    this.#currentId++;
+      if (this.#isCodeDuplicate(products, product.code)) {
+        throw new Error('Fail to add product. Duplicate code property');
+      }
+
+      const newProductId = this.#getLastId(products) + 1;
+      products.push({ id: newProductId, ...product });
+
+      await this.#writeFile(JSON.stringify(products));
+    } catch (error) {
+      console.log("Couldn't add product");
+      throw error;
+    }
   }
 
-  getProductById(id) {
-    const product = this.#products.find((product) => product.id === id);
-    if (!product) {
-      console.log('No product found with that id');
-      return;
+  async getProductById(id) {
+    try {
+      const products = await this.getProducts();
+      const product = products.find((product) => product.id === id);
+
+      if (product === undefined) {
+        throw new Error('No product found with that id');
+      }
+
+      return product;
+    } catch (error) {
+      throw error;
     }
-    return product;
+  }
+
+  async updateProduct(id, updatedValues) {
+    try {
+      const products = await this.getProducts();
+
+      const productIndex = products.findIndex((product) => product.id === id);
+      products[productIndex] = { ...products[productIndex], ...updatedValues };
+
+      this.#writeFile(JSON.parse(products));
+
+      return products[productIndex];
+    } catch (error) {
+      throw error;
+    }
   }
 }
 
@@ -85,22 +114,65 @@ module.exports = {
 
 // ------TESTING-------
 
-// Creacion de la instancia
-const productManager = new ProductManager();
-console.log('Instance created:', productManager);
+const test = async () => {
+  // Creacion de la instancia
+  const productManager = new ProductManager();
+  console.log('Instance created:', productManager);
 
-// Primer llamada a getProducts
-productManager
-  .getProducts()
-  .then((products) => console.log('Saved products:', products))
-  .catch((error) => console.log('Hubo un error'));
+  // Primer llamada a getProducts
+  try {
+    const products = await productManager.getProducts();
+    console.log('Stored products', products);
+  } catch (error) {
+    console.log('Error in getting products', error);
+  }
 
-// Llamada a addProduct
-const product1 = new Product(
-  'producto prueba',
-  'Este es un producto prueba',
-  200,
-  'Sin imagen',
-  'abc123',
-  25
-);
+  // Llamada a addProduct
+  const product1 = new Product(
+    'producto prueba',
+    'Este es un producto prueba',
+    200,
+    'Sin imagen',
+    'abc123',
+    25
+  );
+
+  try {
+    await productManager.addProduct(product1);
+    console.log('New product added');
+
+    const products = await productManager.getProducts();
+    console.log('Stored products', products);
+  } catch (error) {
+    console.log('Error adding products', error);
+  }
+
+  // LLamada a getProductById
+  try {
+    const product1 = await productManager.getProductById(1);
+    console.log('Product found:', product1);
+
+    // Esta tiene que fallar
+    const product2 = await productManager.getProductById(2);
+    console.log('Product found:', product2);
+  } catch (error) {
+    console.log('Error in getting product by id =', 2);
+  }
+
+  try {
+    const updatedValues = {
+      title: 'producto prueba MODIFICADO',
+      price: '50',
+    };
+
+    const updatedProduct = await productManager.updateProduct(1, updatedValues);
+    console.log('Product Modified', updatedProduct);
+
+    const products = await productManager.getProducts();
+    console.log('Stored products', products);
+  } catch (error) {
+    console.log('Error in updating product', error);
+  }
+};
+
+test();
