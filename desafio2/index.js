@@ -13,9 +13,6 @@ class Product {
 }
 
 class ProductManager {
-  #products = [];
-  #currentId = 0;
-
   constructor(dbPath = __dirname) {
     this.path = path.join(dbPath, 'database-ProductManager.json');
     this.#createDB();
@@ -23,22 +20,40 @@ class ProductManager {
 
   #createDB() {
     fs.promises
-      .writeFile(this.path, JSON.stringify(this.#products))
+      .writeFile(this.path, JSON.stringify([]))
       .then(() => console.log('Database has been initialized'))
       .catch(() => console.log('Error creating the database'));
   }
 
   #readFile() {
-    fs.promises.readFile(this.path);
+    return fs.promises.readFile(this.path);
   }
 
-  getProducts() {
-    this.#readFile();
-    return this.#products;
+  #writeFile() {
+    return fs.promises.writeFile(this.path, data);
+  }
+
+  #getLastId(products) {
+    const ids = products.map((product) => product.id);
+    return Math.max(ids);
+  }
+
+  #isIdDuplicate(products, id) {
+    return products.find((product) => product.id === id) === null
+      ? false
+      : true;
+  }
+
+  async getProducts() {
+    try {
+      const data = await this.#readFile();
+      return JSON.parse(data);
+    } catch (error) {
+      throw error;
+    }
   }
 
   addProduct(product) {
-    console.log(product instanceof Product);
     if (!(product instanceof Product)) {
       console.log('Fail to add. Arg must be of type Product');
       return;
@@ -75,7 +90,10 @@ const productManager = new ProductManager();
 console.log('Instance created:', productManager);
 
 // Primer llamada a getProducts
-console.log('Saved products:', productManager.getProducts());
+productManager
+  .getProducts()
+  .then((products) => console.log('Saved products:', products))
+  .catch((error) => console.log('Hubo un error'));
 
 // Llamada a addProduct
 const product1 = new Product(
