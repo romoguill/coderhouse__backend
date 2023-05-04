@@ -98,9 +98,23 @@ class ProductManager {
       const productIndex = products.findIndex((product) => product.id === id);
       products[productIndex] = { ...products[productIndex], ...updatedValues };
 
-      this.#writeFile(JSON.parse(products));
+      this.#writeFile(JSON.stringify(products));
 
       return products[productIndex];
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async deleteProduct(id) {
+    try {
+      await this.getProductById(id);
+
+      let products = await this.getProducts();
+
+      products = products.filter((product) => product.id !== id);
+
+      this.#writeFile(JSON.stringify(products));
     } catch (error) {
       throw error;
     }
@@ -115,6 +129,8 @@ module.exports = {
 // ------TESTING-------
 
 const test = async () => {
+  console.log('Initializing testing suite...');
+
   // Creacion de la instancia
   const productManager = new ProductManager();
   console.log('Instance created:', productManager);
@@ -144,7 +160,7 @@ const test = async () => {
     const products = await productManager.getProducts();
     console.log('Stored products', products);
   } catch (error) {
-    console.log('Error adding products', error);
+    console.log('Error adding products', error.message);
   }
 
   // LLamada a getProductById
@@ -156,9 +172,10 @@ const test = async () => {
     const product2 = await productManager.getProductById(2);
     console.log('Product found:', product2);
   } catch (error) {
-    console.log('Error in getting product by id =', 2);
+    console.log('Error in getting product by id', error.message);
   }
 
+  // LLamada a updateProduct
   try {
     const updatedValues = {
       title: 'producto prueba MODIFICADO',
@@ -171,8 +188,25 @@ const test = async () => {
     const products = await productManager.getProducts();
     console.log('Stored products', products);
   } catch (error) {
-    console.log('Error in updating product', error);
+    console.log('Error in updating product', error.message);
   }
+
+  // LLamada a deleteProduct
+  try {
+    await productManager.deleteProduct(1);
+    console.log('Product deleted =1', 1);
+
+    const products = await productManager.getProducts();
+    console.log('Stored products', products);
+
+    // Esta tiene que fallar
+    await productManager.deleteProduct(2);
+    console.log('Product deleted =', 2);
+  } catch (error) {
+    console.log('Error in deleting product', error.message);
+  }
+
+  console.log('Finished testing');
 };
 
 test();
