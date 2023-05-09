@@ -1,7 +1,17 @@
-export class ProductManager {
-  constructor(dbPath = __dirname) {
-    this.path = path.join(dbPath, 'database-ProductManager.json');
-    this.#createDB();
+import fs from 'fs';
+import path from 'path';
+import Product from './Product.js';
+import { URL } from 'url';
+
+export default class ProductManager {
+  constructor(
+    dbPath = new URL('database-ProductManager.json', import.meta.url),
+    initializeDB = false
+  ) {
+    this.path = dbPath;
+    console.log(this.path);
+
+    initializeDB && this.#createDB();
   }
 
   #createDB() {
