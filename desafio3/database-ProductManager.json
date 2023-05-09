@@ -1,1 +1,92 @@
-[{"id":1,"title":"Leche","description":"Lacteos","price":42,"thumbnail":"sin imagen","code":"aaa005","stock":305}]ck":1304}]
+[
+  {
+    "id": 1,
+    "title": "Lavandina",
+    "description": "Limpieza",
+    "price": 20,
+    "thumbnail": "sin imagen",
+    "code": "aaa001",
+    "stock": 300
+  },
+  {
+    "id": 2,
+    "title": "Chocolate",
+    "description": "Alimentos",
+    "price": 324,
+    "thumbnail": "sin imagen",
+    "code": "aaa002",
+    "stock": 199
+  },
+  {
+    "id": 3,
+    "title": "Galletitas",
+    "description": "Alimentos",
+    "price": 0.34,
+    "thumbnail": "sin imagen",
+    "code": "aaa003",
+    "stock": 1304
+  },
+  {
+    "id": 4,
+    "title": "Jamon",
+    "description": "Fiambres",
+    "price": 686,
+    "thumbnail": "sin imagen",
+    "code": "aaa004",
+    "stock": 2304
+  },
+  {
+    "id": 5,
+    "title": "Leche",
+    "description": "Lacteos",
+    "price": 42,
+    "thumbnail": "sin imagen",
+    "code": "aaa005",
+    "stock": 305
+  },
+  {
+    "id": 6,
+    "title": "Coca",
+    "description": "Gaseosas",
+    "price": 1.23,
+    "thumbnail": "sin imagen",
+    "code": "aaa006",
+    "stock": 305
+  },
+  {
+    "id": 7,
+    "title": "Pan Lactal",
+    "description": "Pan",
+    "price": 0.5,
+    "thumbnail": "sin imagen",
+    "code": "aaa007",
+    "stock": 203
+  },
+  {
+    "id": 8,
+    "title": "Lomo",
+    "description": "Carnes",
+    "price": 356,
+    "thumbnail": "sin imagen",
+    "code": "aaa008",
+    "stock": 4000
+  },
+  {
+    "id": 9,
+    "title": "Bolsa de residuo",
+    "description": "Limpieza",
+    "price": 45,
+    "thumbnail": "sin imagen",
+    "code": "aaa009",
+    "stock": 3004
+  },
+  {
+    "id": 10,
+    "title": "Cerveza",
+    "description": "Bebidas alcoholicas",
+    "price": 203,
+    "thumbnail": "sin imagen",
+    "code": "aaa010",
+    "stock": 10465
+  }
+]

@@ -9,7 +9,6 @@ export default class ProductManager {
     initializeDB = false
   ) {
     this.path = dbPath;
-    console.log(this.path);
 
     initializeDB && this.#createDB();
   }
@@ -40,10 +39,14 @@ export default class ProductManager {
       : true;
   }
 
-  async getProducts() {
+  async getProducts(options) {
+    const { limit } = options;
     try {
       const data = await this.#readFile();
-      return JSON.parse(data);
+      console.log(limit);
+      return limit === 'undefined'
+        ? JSON.parse(data)
+        : JSON.parse(data).slice(0, limit);
     } catch (error) {
       throw error;
     }
