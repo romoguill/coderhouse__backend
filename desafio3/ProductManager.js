@@ -39,11 +39,11 @@ export default class ProductManager {
       : true;
   }
 
-  async getProducts(options) {
+  async getProducts(options = {}) {
     const { limit } = options;
     try {
       const data = await this.#readFile();
-      console.log(limit);
+
       return limit === 'undefined'
         ? JSON.parse(data)
         : JSON.parse(data).slice(0, limit);

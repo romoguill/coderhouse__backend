@@ -19,4 +19,19 @@ app.get('/products', async (req, res) => {
   }
 });
 
+app.get('/products/:pid', async (req, res) => {
+  const id = req.params.pid;
+  console.log(parseInt(id));
+  try {
+    const product = await productManager.getProductById(parseInt(id));
+    res.status(200).send({ product });
+  } catch (error) {
+    if (error.message === 'No product found with that id') {
+      res.status(404).send({ error: error.message });
+    } else {
+      res.status(500).send({ error: 'Internal server error' });
+    }
+  }
+});
+
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
