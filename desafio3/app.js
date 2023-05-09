@@ -1,5 +1,4 @@
 import express from 'express';
-import Product from './Product.js';
 import ProductManager from './ProductManager.js';
 
 const productManager = new ProductManager();
@@ -21,7 +20,7 @@ app.get('/products', async (req, res) => {
 
 app.get('/products/:pid', async (req, res) => {
   const id = req.params.pid;
-  console.log(parseInt(id));
+
   try {
     const product = await productManager.getProductById(parseInt(id));
     res.status(200).send({ product });
@@ -32,6 +31,10 @@ app.get('/products/:pid', async (req, res) => {
       res.status(500).send({ error: 'Internal server error' });
     }
   }
+});
+
+app.all('*', (req, res) => {
+  res.status(404).send('RESOURCE NOT FOUND');
 });
 
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
