@@ -6,7 +6,8 @@
   "type": "module",
   "scripts": {
     "test-desafio1": "jest ./desafio1",
-    "desafio3": "nodemon ./desafio3/app.js"
+    "desafio3": "nodemon ./desafio3/app.js",
+    "desafio4": "nodemon ./desafio4/app.js"
   },
   "author": "",
   "license": "ISC",
