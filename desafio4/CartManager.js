@@ -29,6 +29,7 @@ export default class CartManager {
 
   #getLastId(carts) {
     const ids = carts.map((cart) => cart.id);
+    if (ids.length === 0) return 0;
     return Math.max(...ids);
   }
 
@@ -48,6 +49,7 @@ export default class CartManager {
   async getCartById(id) {
     try {
       const carts = await this.getCarts();
+
       const cart = carts.find((cart) => cart.id === id);
 
       if (cart === undefined) {
@@ -64,12 +66,33 @@ export default class CartManager {
     try {
       const carts = await this.getCarts();
 
-      const newCartId = this.#getLastId(carts) + 1;
+      const newCartId = this.#getLastId(carts) + 1 || 1;
       carts.push({ id: newCartId, products: [] });
 
       await this.#writeFile(JSON.stringify(carts));
     } catch (error) {
       console.log("Couldn't add cart");
+      throw error;
+    }
+  }
+
+  async addProductToCart(cartId, productId) {
+    try {
+      const carts = await this.getCarts();
+
+      const cartIndex = carts.findIndex((cart) => cart.id === cartId);
+
+      const products = carts[cartIndex].products;
+
+      let product = products.find((product) => product.id === productId);
+      if (product) {
+        product.quantity++;
+      } else {
+        products.push({ id: productId, quantity: 1 });
+      }
+
+      await this.#writeFile(JSON.stringify(carts));
+    } catch (error) {
       throw error;
     }
   }
