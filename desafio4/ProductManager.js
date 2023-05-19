@@ -5,7 +5,7 @@ import { URL } from 'url';
 
 export default class ProductManager {
   constructor(
-    dbPath = new URL('database-ProductManager.json', import.meta.url),
+    dbPath = new URL('database-Products.json', import.meta.url),
     initializeDB = false
   ) {
     this.path = dbPath;
